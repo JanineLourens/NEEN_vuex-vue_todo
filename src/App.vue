@@ -53,7 +53,6 @@ export default {
   },
   watch: {
     appLoading(bool) {
-      console.log("apploading", bool);
       if (bool) {
         document.documentElement.style.overflow = "hidden";
         // document.documentElement is the same as using document.querySelector('#root')
@@ -143,6 +142,7 @@ a {
     flex: 5;
     display: flex;
     align-items: center;
+    justify-content: center;
   }
   span {
     width: 30px;

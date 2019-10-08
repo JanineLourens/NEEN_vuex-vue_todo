@@ -1,6 +1,8 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import axios from "axios";
+import { guidGenerator } from "../../utils";
+
 Vue.use(Vuex);
 
 export default {
@@ -17,20 +19,23 @@ export default {
     },
     fetchTodosMutation: (state, todos) => (state.todos = todos),
     setLoadingMutation: (state, bool) => (state.appLoading = bool),
-    removeTodoMutation: (state, todoId) =>
-      (state.todos = state.todos.filter(item => item.id !== todoId))
+    removeTodoMutation: (state, id) =>
+      (state.todos = state.todos.filter(todo => todo.id !== id))
   },
   actions: {
     async newTodoAction({ commit }, todoTitle) {
       commit("setLoadingMutation", true);
+      const customId = guidGenerator();
       const response = await axios.post(
         "https://jsonplaceholder.typicode.com/todos",
         {
           title: todoTitle,
-          completed: false
+          completed: false,
+          id: customId
         }
       );
-      commit("newTodoMutation", response.data);
+
+      commit("newTodoMutation", { ...response.data, id: customId });
       commit("setLoadingMutation", false);
     },
     async fetchTodosAction({ commit }) {
@@ -44,7 +49,6 @@ export default {
       await axios.delete(
         `https://jsonplaceholder.typicode.com/todos/${todoId}`
       );
-
       commit("removeTodoMutation", todoId);
       commit("setLoadingMutation", false);
     }
