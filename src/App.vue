@@ -15,7 +15,11 @@
             class="card"
             :key="`${i}-${todo.id}`"
           >
-            {{ todo.title }}
+            <h3>{{ todo.title }}</h3>
+
+            <span @click="removeTodoAction(todo.id)">
+              <i class="fas fa-trash-alt"></i>
+            </span>
           </div>
         </div>
       </div>
@@ -39,7 +43,7 @@ export default {
   },
   props: {},
   methods: {
-    ...mapActions(["fetchTodosAction"])
+    ...mapActions(["fetchTodosAction", "removeTodoAction"])
   },
   computed: {
     ...mapState({
@@ -98,13 +102,16 @@ a {
 }
 .card {
   position: relative;
-  padding: 40px;
-  min-height: 180px;
+  flex-direction: column;
+  padding: 40px 40px 8px;
+  min-height: 205px;
   color: #fff;
   font: 20px "Rosario", sans-serif;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+
   background: #42b983;
   background: linear-gradient(
         to left bottom,
@@ -129,6 +136,32 @@ a {
     width: 2em;
     height: 2em;
     transform: rotate(180deg);
+  }
+  h3 {
+    width: 100%;
+    margin: 0;
+    flex: 5;
+    display: flex;
+    align-items: center;
+  }
+  span {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-self: flex-end;
+    margin-right: -32px;
+
+    font-size: 17px;
+    color: #a7dcc1;
+
+    &:hover .fa-trash-alt:before {
+      opacity: 1;
+      cursor: pointer;
+      content: "\f1f8";
+      color: #fff;
+    }
   }
 }
 </style>

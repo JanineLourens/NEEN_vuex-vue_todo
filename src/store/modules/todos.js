@@ -16,7 +16,9 @@ export default {
       return state.todos.unshift(todo);
     },
     fetchTodosMutation: (state, todos) => (state.todos = todos),
-    setLoadingMutation: (state, bool) => (state.appLoading = bool)
+    setLoadingMutation: (state, bool) => (state.appLoading = bool),
+    removeTodoMutation: (state, todoId) =>
+      (state.todos = state.todos.filter(item => item.id !== todoId))
   },
   actions: {
     async newTodoAction({ commit }, todoTitle) {
@@ -36,6 +38,15 @@ export default {
         "https://jsonplaceholder.typicode.com/todos?_limit=10"
       );
       commit("fetchTodosMutation", response.data);
+    },
+    async removeTodoAction({ commit }, todoId) {
+      commit("setLoadingMutation", true);
+      await axios.delete(
+        `https://jsonplaceholder.typicode.com/todos/${todoId}`
+      );
+
+      commit("removeTodoMutation", todoId);
+      commit("setLoadingMutation", false);
     }
   }
 };
