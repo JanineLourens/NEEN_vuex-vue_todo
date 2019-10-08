@@ -5,6 +5,7 @@ Vue.use(Vuex);
 
 export default {
   state: {
+    appLoading: false,
     todos: []
   },
   getters: {
@@ -14,13 +15,12 @@ export default {
     newTodoMutation: (state, todo) => {
       return state.todos.unshift(todo);
     },
-    fetchTodosMutation: (state, todos) => {
-      return (state.todos = todos);
-    }
+    fetchTodosMutation: (state, todos) => (state.todos = todos),
+    setLoadingMutation: (state, bool) => (state.appLoading = bool)
   },
   actions: {
     async newTodoAction({ commit }, todoTitle) {
-      console.log("foo");
+      commit("setLoadingMutation", true);
       const response = await axios.post(
         "https://jsonplaceholder.typicode.com/todos",
         {
@@ -28,8 +28,8 @@ export default {
           completed: false
         }
       );
-      console.log("response", response.data);
       commit("newTodoMutation", response.data);
+      commit("setLoadingMutation", false);
     },
     async fetchTodosAction({ commit }) {
       const response = await axios.get(

@@ -1,4 +1,4 @@
-# vuestate
+# typicaltodoProject
 
 ## Project setup
 ```

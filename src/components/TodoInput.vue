@@ -26,7 +26,6 @@ export default {
     ...mapActions(["newTodoAction"]),
     onSubmit(e) {
       e.preventDefault();
-      console.log("title", this.title);
       this.newTodoAction(this.title);
     }
   }
@@ -39,6 +38,8 @@ form {
   margin: 0 auto;
   margin-bottom: 3em;
   max-width: 50%;
+  display: flex;
+  justify-content: center;
 }
 
 input[type="text"] {

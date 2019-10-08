@@ -3,13 +3,18 @@
     <img alt="Vue logo" src="./assets/logo.png" />
     <template>
       <div class="hello">
+        <loader v-if="appLoading" />
         <h1>The Typical TODO practice project ™️</h1>
         <p>
           ... because what else.
         </p>
         <todo-input />
         <div class="todo-wrapper">
-          <div v-for="todo in allTodos" class="card" :key="todo.id">
+          <div
+            v-for="(todo, i) in allTodos"
+            class="card"
+            :key="`${i}-${todo.id}`"
+          >
             {{ todo.title }}
           </div>
         </div>
@@ -19,25 +24,39 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters, mapActions, mapState } from "vuex";
 import todoInput from "./components/TodoInput";
+import loader from "./components/Loader";
 
 export default {
   name: "app",
   components: {
-    todoInput
+    todoInput,
+    loader
   },
   created() {
     this.fetchTodosAction();
   },
-  props: {
-    msg: String
-  },
+  props: {},
   methods: {
     ...mapActions(["fetchTodosAction"])
   },
   computed: {
+    ...mapState({
+      appLoading: state => state.todos.appLoading
+    }),
     ...mapGetters(["allTodos"])
+  },
+  watch: {
+    appLoading(bool) {
+      console.log("apploading", bool);
+      if (bool) {
+        document.documentElement.style.overflow = "hidden";
+        // document.documentElement is the same as using document.querySelector('#root')
+      } else {
+        document.documentElement.style.overflow = "auto";
+      }
+    }
   }
 };
 </script>
@@ -69,8 +88,9 @@ a {
 
 .todo-wrapper {
   display: grid;
-  grid-template-columns: 33% 33% 33%;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   grid-gap: 10px;
+
   background-color: #fff;
   color: #444;
   max-width: 800px;
