@@ -37,7 +37,7 @@ form {
   display: flex;
   margin: 0 auto;
   margin-bottom: 3em;
-  max-width: 50%;
+  max-width: 320px;
   display: flex;
   justify-content: center;
 }

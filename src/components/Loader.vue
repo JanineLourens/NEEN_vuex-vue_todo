@@ -18,7 +18,6 @@ export default {
   left: 0;
   top: 0;
   z-index: 999;
-  background: rgba(0, 0, 0, 0.46);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -38,8 +37,8 @@ export default {
   height: 0;
   margin: 6px;
   box-sizing: border-box;
-  border: 26px solid #fff;
-  border-color: #fff transparent #fff transparent;
+  border: 26px solid hotpink;
+  border-color: hotpink transparent hotpink transparent;
   animation: lds-hourglass 1.2s infinite;
 }
 @keyframes lds-hourglass {

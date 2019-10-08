@@ -13,13 +13,18 @@
           <div
             v-for="(todo, i) in allTodos"
             class="card"
+            :class="{ completed: todo.completed }"
             :key="`${i}-${todo.id}`"
           >
             <h3>{{ todo.title }}</h3>
-
-            <span @click="removeTodoAction(todo.id)">
-              <i class="fas fa-trash-alt"></i>
-            </span>
+            <div class="icon-container">
+              <span class="check">
+                <i @click="onCheck(todo)" class="far fa-square"></i>
+              </span>
+              <span class="delete" @click="removeTodoAction(todo.id)">
+                <i class="fas fa-trash-alt"></i>
+              </span>
+            </div>
           </div>
         </div>
       </div>
@@ -43,7 +48,13 @@ export default {
   },
   props: {},
   methods: {
-    ...mapActions(["fetchTodosAction", "removeTodoAction"])
+    ...mapActions(["fetchTodosAction", "removeTodoAction", "updateTodoAction"]),
+    onCheck(todo) {
+      this.updateTodoAction({
+        ...todo,
+        completed: !todo.completed
+      });
+    }
   },
   computed: {
     ...mapState({
@@ -99,6 +110,7 @@ a {
   max-width: 800px;
   margin: 0 auto;
 }
+
 .card {
   position: relative;
   flex-direction: column;
@@ -145,16 +157,14 @@ a {
     justify-content: center;
   }
   span {
-    width: 30px;
-    height: 30px;
     display: flex;
     justify-content: center;
     align-items: center;
     align-self: flex-end;
-    margin-right: -32px;
-
+    height: 100%;
     font-size: 17px;
-    color: #a7dcc1;
+    color: #d9d9d9;
+    text-decoration: none !important;
 
     &:hover .fa-trash-alt:before {
       opacity: 1;
@@ -162,6 +172,47 @@ a {
       content: "\f1f8";
       color: #fff;
     }
+
+    &:hover .fa-square:before {
+      opacity: 1;
+      cursor: pointer;
+      content: "\f14a";
+      color: #fff;
+    }
+  }
+
+  .icon-container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    height: 27px;
+    .check {
+      margin-left: -22px;
+    }
+
+    .delete {
+      margin-right: -22px;
+    }
+  }
+}
+
+.completed {
+  background-color: #34495e;
+  background: linear-gradient(
+        to left bottom,
+        transparent 50%,
+        rgba(0, 0, 0, 0.4) 0
+      )
+      no-repeat 100% 0/2em 2em,
+    linear-gradient(-135deg, transparent 1.5em, #34495e 0);
+
+  h3 {
+    text-decoration: line-through;
+    opacity: 0.7;
+  }
+
+  .fa-square:before {
+    content: "\f14a";
   }
 }
 </style>

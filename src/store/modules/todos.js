@@ -1,8 +1,9 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import axios from "axios";
-import { guidGenerator } from "../../utils";
+// import { guidGenerator } from "../../utils";
 
+/** NOTE: THE  PUT/POST/DEL API CALLS TO JSONPLACEHOLDER doesn't actually do anything */
 Vue.use(Vuex);
 
 export default {
@@ -20,12 +21,19 @@ export default {
     fetchTodosMutation: (state, todos) => (state.todos = todos),
     setLoadingMutation: (state, bool) => (state.appLoading = bool),
     removeTodoMutation: (state, id) =>
-      (state.todos = state.todos.filter(todo => todo.id !== id))
+      (state.todos = state.todos.filter(todo => todo.id !== id)),
+    updateTodoMutation: (state, updatedTodo) => {
+      const index = state.todos.findIndex(todo => todo.id === updatedTodo.id);
+      console.log("hey", index);
+      if (index !== -1) {
+        state.todos.splice(index, 1, updatedTodo);
+      }
+    }
   },
   actions: {
     async newTodoAction({ commit }, todoTitle) {
       commit("setLoadingMutation", true);
-      const customId = guidGenerator();
+      const customId = Math.floor(Math.random() * 10) + 1;
       const response = await axios.post(
         "https://jsonplaceholder.typicode.com/todos",
         {
@@ -50,6 +58,18 @@ export default {
         `https://jsonplaceholder.typicode.com/todos/${todoId}`
       );
       commit("removeTodoMutation", todoId);
+      commit("setLoadingMutation", false);
+    },
+    async updateTodoAction({ commit }, updatedTodo) {
+      commit("setLoadingMutation", true);
+      console.log("updated,todo", updatedTodo);
+
+      //  This doesn't actually do anything
+      await axios.put(
+        `https://jsonplaceholder.typicode.com/todos/${updatedTodo.id}`
+      );
+
+      commit("updateTodoMutation", updatedTodo);
       commit("setLoadingMutation", false);
     }
   }
